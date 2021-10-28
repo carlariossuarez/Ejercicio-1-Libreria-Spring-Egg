@@ -1,0 +1,13 @@
+body{
+    background-image: url(/img/Libros\ online\ Egg.png);
+}
+nav{
+    background-color: transparent;
+    
+}
+.navbar-brand , .nav-link{
+    color: #CBF1F1
+}
+.navbar a, .nav-link {
+  color: #CBF1F1;
+}
