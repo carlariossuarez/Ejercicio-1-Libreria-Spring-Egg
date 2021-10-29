@@ -13,13 +13,28 @@
 <body>
     
 <nav th:replace="fragmentos :: navbar"></nav>
+<div class=" container-fluid">
+  <div class="row justify-content-center">
+      <div class="alert alert-secondary alert-dismissible fade show text-center col-5" role="alert"
+          th:if="${exito != null}">
+          <strong th:text="${exito}"></strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      <div class="alert alert-warning alert-dismissible fade show text-center col-5" role="alert"
+          th:if="${error != null}">
+          <strong th:text="${error}"></strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+  </div>
+</div>
       <div class="container mt-5 main">
         <div class="row">
          
        
           <h2 class="col-6">Lista de editoriales</h2>
           <div class=" col-6 text-end">
-            <a class="btn btn-primary me-md-2" th:href="@{/autores/crear}" ><i class="fas fa-plus-square"></i> Agregar Autor</a>
+            <a class="btn btn-primary me-md-2" th:href="@{/editoriales/crear}" ><i class="fas fa-plus-square"></i> Agregar Editorial</a>
             
           </div>
         </div>

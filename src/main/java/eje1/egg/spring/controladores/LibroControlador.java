@@ -8,6 +8,8 @@ import eje1.egg.spring.servicios.AutorServicio;
 import eje1.egg.spring.servicios.EditorialServicio;
 import eje1.egg.spring.servicios.LibroServicio;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -28,19 +32,18 @@ public class LibroControlador {
     private AutorServicio autorServicio;
     @Autowired
     private EditorialServicio editorialServicio;
-           
 
     @GetMapping
-    public ModelAndView mostrarLibros() throws Exception, ErrorServicio {
-        try {
-            ModelAndView mav = new ModelAndView("libros");
-            mav.addObject("libros", libroServicio.obtenerLibros());
-            return mav;
-        } catch (ErrorServicio ex) {
-            throw ex;
-        } catch (Exception e) {
-            throw e;
+    public ModelAndView mostrarLibros(HttpServletRequest request) throws Exception, ErrorServicio {
+
+        ModelAndView mav = new ModelAndView("libros");
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+        if (flashMap != null) {
+            mav.addObject("exito", flashMap.get("exito-name"));
+            mav.addObject("error", flashMap.get("error-name"));
         }
+        mav.addObject("libros", libroServicio.obtenerLibros());
+        return mav;
 
     }
 
@@ -66,7 +69,7 @@ public class LibroControlador {
         try {
             ModelAndView mav = new ModelAndView("libros-formulario");
             mav.addObject("libro", libroServicio.buscarPorId(id));
-            mav.addObject("autores", autorServicio.obtenerAutor() );
+            mav.addObject("autores", autorServicio.obtenerAutor());
             mav.addObject("editoriales", editorialServicio.obtenerEditorial());
             mav.addObject("title", "Editar Libro");
             mav.addObject("action", "modificar");
@@ -81,43 +84,44 @@ public class LibroControlador {
 
     @PostMapping("/guardar")
     public RedirectView guardarLibros(@RequestParam Long isbn, @RequestParam String titulo, @RequestParam Integer anio,
-            @RequestParam Integer ejemplares, @RequestParam String idEditorial, @RequestParam String idAutor) throws Exception, ErrorServicio {
+            @RequestParam Integer ejemplares, @RequestParam String idEditorial, @RequestParam String idAutor, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             libroServicio.crearLibro(isbn, titulo, anio, ejemplares, idEditorial, idAutor);
-            return new RedirectView("/libros");
-        }catch(ErrorServicio ex){
-            throw ex;
+            attributes.addFlashAttribute("exito-name", "El libro ha sido creado exitosamente");
+
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+
+        return new RedirectView("/libros");
 
     }
 
     @PostMapping("/modificar")
-    public RedirectView modificarLibros(@RequestParam String id,  @RequestParam Long isbn,@RequestParam String titulo, @RequestParam Integer anio,
-            @RequestParam Integer ejemplares, @RequestParam String idEditorial, @RequestParam String idAutor) throws Exception, ErrorServicio{
+    public RedirectView modificarLibros(@RequestParam String id, @RequestParam Long isbn, @RequestParam String titulo, @RequestParam Integer anio,
+            @RequestParam Integer ejemplares, @RequestParam String idEditorial, @RequestParam String idAutor) throws Exception, ErrorServicio {
         try {
-            libroServicio.modificarLibro(id, isbn, titulo, anio,ejemplares, idEditorial, idAutor);
-        return new RedirectView("/libros");
-        }catch(ErrorServicio ex){
+            libroServicio.modificarLibro(id, isbn, titulo, anio, ejemplares, idEditorial, idAutor);
+            return new RedirectView("/libros");
+        } catch (ErrorServicio ex) {
             throw ex;
         } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
     @PostMapping("/eliminar/{id}")
-    public RedirectView eliminarLibro(@PathVariable String id) throws Exception, ErrorServicio{
+    public RedirectView eliminarLibro(@PathVariable String id) throws Exception, ErrorServicio {
         try {
             libroServicio.bajaLibro(id);
-        return new RedirectView("/libros");
-        }catch(ErrorServicio ex){
+            return new RedirectView("/libros");
+        } catch (ErrorServicio ex) {
             throw ex;
         } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
 }
