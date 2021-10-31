@@ -81,28 +81,29 @@ public class EditorialControlador {
     }
 
     @PostMapping("/modificar")
-    public RedirectView modificarEditoriales(@RequestParam String id, @RequestParam String nombre) throws Exception, ErrorServicio {
+    public RedirectView modificarEditoriales(@RequestParam String id, @RequestParam String nombre, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             editorialServicio.modificarEditorial(id, nombre);
-            return new RedirectView("/editoriales");
-        } catch (ErrorServicio ex) {
-            throw ex;
+            attributes.addFlashAttribute("exito-name", "La editorial ha sido modificada exitosamente");
+        
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+        return new RedirectView("/editoriales");
 
     }
 
     @PostMapping("/eliminar/{id}")
-    public RedirectView eliminarEditorial(@PathVariable String id) throws Exception, ErrorServicio {
+    public RedirectView eliminarEditorial(@PathVariable String id, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             editorialServicio.bajarEditorial(id);
-            return new RedirectView("/editoriales");
-        }catch(ErrorServicio ex){
-            throw ex;
+            Editorial editorial = editorialServicio.buscarPorId(id);
+            attributes.addFlashAttribute("exito-name", "La editorial ha sido " +((editorial.getAlta())? "habilitada" : "deshabilitada")+ " exitosamente");
+        
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+        return new RedirectView("/editoriales");
 
     }
 }

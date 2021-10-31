@@ -76,28 +76,30 @@ public class AutorControlador {
     }
 
     @PostMapping("/modificar")
-    public RedirectView modificarAutores(@RequestParam String id, @RequestParam String nombre) throws Exception, ErrorServicio {
+    public RedirectView modificarAutores(@RequestParam String id, @RequestParam String nombre, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             autorServicio.modificarAutor(id, nombre);
-            return new RedirectView("/autores");
-        } catch (ErrorServicio ex) {
-            throw ex;
+            attributes.addFlashAttribute("exito-name", "El autor ha sido modificado exitosamente");
+        
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+        return new RedirectView("/autores");
 
     }
 
     @PostMapping("/eliminar/{id}")
-    public RedirectView eliminarAutor(@PathVariable String id) throws Exception, ErrorServicio {
+    public RedirectView eliminarAutor(@PathVariable String id, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             autorServicio.bajarAutor(id);
-            return new RedirectView("/autores");
-        } catch (ErrorServicio ex) {
-            throw ex;
+            Autor autor = autorServicio.buscarPorId(id);
+            attributes.addFlashAttribute("exito-name", "El autor ha sido " +((autor.getAlta())? "habilitado" : "deshabilitado")+ " exitosamente");
+            
+       
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+        return new RedirectView("/autores");
 
     }
 

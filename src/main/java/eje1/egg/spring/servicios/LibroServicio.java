@@ -7,6 +7,7 @@ import eje1.egg.spring.errores.ErrorServicio;
 import eje1.egg.spring.repositorios.AutorRepositorio;
 import eje1.egg.spring.repositorios.EditorialRepositorio;
 import eje1.egg.spring.repositorios.LibroRepositorio;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class LibroServicio {
     @Transactional
     public void modificarLibro(String id, Long isbn, String titulo, Integer anio,Integer ejemplares, String idEditorial, String idAutor) throws Exception, ErrorServicio {
         try {
-            validar(isbn, titulo, anio);
+            validar(isbn, titulo, anio, ejemplares);
             Optional<Libro> respuesta = libroRepositorio.findById(id);
 
             if (respuesta.isPresent()) {
@@ -143,6 +144,8 @@ public class LibroServicio {
     }
 
     private void validar(Long isbn, String titulo, Integer anio, Integer ejemplares) throws ErrorServicio {
+        
+        Calendar anioActual = Calendar.getInstance();
         try {
             if (isbn == null) {
                 throw new ErrorServicio("El ISBN no puede ser nulo");
@@ -150,14 +153,22 @@ public class LibroServicio {
             if (validarIsbn(Long.toString(isbn)) == false) {
                 throw new ErrorServicio("El ISBN debe contener con 13 digitos y comenzar con 978");
             }
-            if (titulo == null || titulo.isEmpty()) {
+            if (titulo == null) {
                 throw new ErrorServicio("El titulo no puede ser nulo");
+            }else if (titulo.trim().isEmpty()){
+                throw new ErrorServicio("El titulo no puede estar vacio");
+            }else if(titulo.length()<=1){
+                throw new ErrorServicio("El titulo no puede tener una sola letra");
             }
             if (anio == null) {
                 throw new ErrorServicio("El año no puede ser nulo");
+            }else if(anio > anioActual.get(Calendar.YEAR)){
+                throw new ErrorServicio("El año no puede ser mayor al año actual");
             }
             if (ejemplares == null) {
                 throw new ErrorServicio("Los ejemplares no pueden ser nulos");
+            }else if(ejemplares < 0){
+                throw new ErrorServicio("Los ejemplares no pueden ser menores a 0");
             }
 
         } catch (ErrorServicio ex) {
@@ -168,27 +179,7 @@ public class LibroServicio {
 
     }
 
-    private void validar(Long isbn, String titulo, Integer anio) throws Exception, ErrorServicio {
-        try {
-            if (isbn == null) {
-                throw new ErrorServicio("El ISBN no puede ser nulo");
-            }
-            if (validarIsbn(Long.toString(isbn)) == false) {
-                throw new ErrorServicio("El ISBN debe contener con 13 digitos y comenzar con 978");
-            }
-            if (titulo == null || titulo.isEmpty()) {
-                throw new ErrorServicio("El titulo no puede ser nulo");
-            }
-            if (anio == null) {
-                throw new ErrorServicio("El año no puede ser nulo");
-            }
-        } catch (ErrorServicio ex) {
-            throw ex;
-        } catch (Exception e) {
-            throw e;
-        }
-
-    }
+    
 
     private Boolean validarIsbn(String isbn) {
         return isbn.matches("^(978)[0-9]{10}$");

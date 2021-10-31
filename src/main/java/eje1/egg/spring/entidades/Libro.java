@@ -4,6 +4,7 @@ package eje1.egg.spring.entidades;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,8 +22,10 @@ public class Libro {
     private Integer ejemplaresRestantes;
     private Boolean alta;
     @ManyToOne
+    @JoinColumn(nullable=false)
     private Autor autor;
     @ManyToOne
+    @JoinColumn(nullable=false)
     private Editorial editorial;
 
     public Libro() {

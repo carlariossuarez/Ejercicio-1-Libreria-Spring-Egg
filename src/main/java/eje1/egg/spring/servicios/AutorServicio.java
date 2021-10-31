@@ -102,6 +102,8 @@ public class AutorServicio {
     private void validar(String nombre) throws Exception, ErrorServicio {
         try {
             if (nombre == null || nombre.isEmpty()) {
+            throw new ErrorServicio("El nombre no puede ser nulo");
+        }else if(nombre.trim().isEmpty()){
             throw new ErrorServicio("El nombre no puede estar vacio");
         }
         }catch(ErrorServicio ex){

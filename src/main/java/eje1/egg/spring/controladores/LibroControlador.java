@@ -84,7 +84,7 @@ public class LibroControlador {
 
     @PostMapping("/guardar")
     public RedirectView guardarLibros(@RequestParam Long isbn, @RequestParam String titulo, @RequestParam Integer anio,
-            @RequestParam Integer ejemplares, @RequestParam String idEditorial, @RequestParam String idAutor, RedirectAttributes attributes) throws Exception, ErrorServicio {
+            @RequestParam Integer ejemplares, @RequestParam ("editorial") String idEditorial, @RequestParam ("autor") String idAutor, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             libroServicio.crearLibro(isbn, titulo, anio, ejemplares, idEditorial, idAutor);
             attributes.addFlashAttribute("exito-name", "El libro ha sido creado exitosamente");
@@ -99,28 +99,29 @@ public class LibroControlador {
 
     @PostMapping("/modificar")
     public RedirectView modificarLibros(@RequestParam String id, @RequestParam Long isbn, @RequestParam String titulo, @RequestParam Integer anio,
-            @RequestParam Integer ejemplares, @RequestParam String idEditorial, @RequestParam String idAutor) throws Exception, ErrorServicio {
+            @RequestParam Integer ejemplares, @RequestParam ("editorial") String idEditorial, @RequestParam ("autor") String idAutor, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             libroServicio.modificarLibro(id, isbn, titulo, anio, ejemplares, idEditorial, idAutor);
-            return new RedirectView("/libros");
-        } catch (ErrorServicio ex) {
-            throw ex;
+            attributes.addFlashAttribute("exito-name", "El libro ha sido modificado exitosamente");
+            
+       
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+        return new RedirectView("/libros");
 
     }
 
     @PostMapping("/eliminar/{id}")
-    public RedirectView eliminarLibro(@PathVariable String id) throws Exception, ErrorServicio {
+    public RedirectView eliminarLibro(@PathVariable String id, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
             libroServicio.bajaLibro(id);
-            return new RedirectView("/libros");
-        } catch (ErrorServicio ex) {
-            throw ex;
+            Libro libro = libroServicio.buscarPorId(id);
+           attributes.addFlashAttribute("exito-name", "El libro ha sido "+((libro.getAlta())? "habilitado" : "deshabilitado")+"  exitosamente");
         } catch (Exception e) {
-            throw e;
+            attributes.addFlashAttribute("error-name", e.getMessage());
         }
+        return new RedirectView("/libros");
 
     }
 
