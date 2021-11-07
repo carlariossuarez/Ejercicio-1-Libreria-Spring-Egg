@@ -1,13 +1,30 @@
+html,
 body{
-    background-image: url(/img/Libros\ online\ Egg.png);
+  background-image: url(../img/learning-concept.png);
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 nav{
     background-color: transparent;
     
 }
 .navbar-brand , .nav-link{
-    color: #CBF1F1
+    color: black
 }
-.navbar a, .nav-link {
-  color: #CBF1F1;
+.texto{
+  
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-90%) translateY(-120%);
+  
+}
+h1{
+  font-size: 50px;
+  margin-bottom: 30px;
+}
+p{
+  font-size: 20px;
 }

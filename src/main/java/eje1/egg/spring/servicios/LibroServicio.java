@@ -35,6 +35,8 @@ public class LibroServicio {
             libro.setTitulo(titulo);
             libro.setAnio(anio);
             libro.setEjemplares(ejemplares);
+            libro.setEjemplaresRestantes(ejemplares);
+            libro.setEjemplaresPrestados(0);
 
             libro.setAlta(true);
             Optional<Editorial> respuesta1 = editorialRepositorio.findById(idEditorial);

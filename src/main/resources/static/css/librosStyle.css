@@ -1,8 +1,16 @@
+html,
 body{
-    background-image: url(../img/Libro.png);
+    min-height: 100vh;
+    background-image: url(../img/online-learning-concept.png);
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
     
 }
 .table{
-    background-color:lightgray
+    background-color:transparent
+    
 
 }
