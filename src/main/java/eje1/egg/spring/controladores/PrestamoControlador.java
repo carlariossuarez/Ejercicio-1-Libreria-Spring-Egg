@@ -41,7 +41,7 @@ public class PrestamoControlador {
             mav.addObject("exito", flashMap.get("exito-name"));
             mav.addObject("error", flashMap.get("error-name"));
         }
-        mav.addObject("prestamos", prestamoServicio.obtenerPrestamos());
+        mav.addObject("prestamos", prestamoServicio.findAll(true));
         return mav;
     }
 

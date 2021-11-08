@@ -49,6 +49,7 @@
                         <th class="col-md-3 px-md-2" scope="col">Apellido</th>
                         <th class="col-md-3 px-md-2" scope="col">Documento</th>
                         <th class="col-md-3 px-md-2" scope="col">Telefono</th>
+                        <th class="col-md-3 px-md-2" scope="col">Historial de prestamos</th>
                         <th class="col-md-3 px-md-2" scope="col">Editar</th>
                         <th class="col-md-3 px-md-2" scope="col">Eliminar</th>
                        
@@ -60,6 +61,8 @@
                             <td th:text="${cliente.apellido}"></td>
                             <td th:text="${cliente.documento}"></td>
                             <td th:text="${cliente.telefono}"></td>
+                            
+                            <td><a class="btn btn-secondary btn-sm" th:href="@{/clientes/mostrar-prestamos-clientes/__${cliente.id}__}">Historial de prestamos</a></td>
 
                             <td th:if="${cliente.alta}"class="col-md-3 px-md-2 d-flex justify-content-around w-100">
                                 <a class="btn btn-secondary btn-sm" th:href="@{/clientes/editar-clientes/__${cliente.id}__}">Editar</a>

@@ -3,6 +3,7 @@ package eje1.egg.spring.controladores;
 import eje1.egg.spring.entidades.Cliente;
 import eje1.egg.spring.errores.ErrorServicio;
 import eje1.egg.spring.servicios.ClienteServicio;
+import eje1.egg.spring.servicios.PrestamoServicio;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ClienteControlador {
 
     @Autowired
     private ClienteServicio clienteServicio;
+    @Autowired
+    private PrestamoServicio prestamoServicio;
+    
 
     @GetMapping
     public ModelAndView mostrarClientes(HttpServletRequest request) throws Exception, ErrorServicio {
@@ -33,7 +37,22 @@ public class ClienteControlador {
             mav.addObject("error", flashMap.get("error-name"));
         }
         mav.addObject("clientes", clienteServicio.obtenerClientes());
+        
         return mav;
+    }
+    
+    @GetMapping("/mostrar-prestamos-clientes/{id}")
+    public ModelAndView prestamosClientes(@PathVariable String id) throws Exception, ErrorServicio {
+        try {
+            ModelAndView mav = new ModelAndView("prestamosClientes");
+        mav.addObject("clientePrestamo", prestamoServicio.prestamosClienteId(id));
+        return mav;
+        } catch (ErrorServicio ex) {
+            throw new ErrorServicio("Error al obtener prestamos de clientes");
+        }catch (Exception e){
+            throw e;
+        }
+        
     }
 
     @GetMapping("/crear-clientes")

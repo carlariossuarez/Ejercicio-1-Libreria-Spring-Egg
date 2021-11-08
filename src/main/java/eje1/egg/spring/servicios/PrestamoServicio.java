@@ -27,10 +27,7 @@ public class PrestamoServicio {
     public void crearPrestamo(LocalDate fechaDevolucion, String idLibro, String idCliente) throws Exception, ErrorServicio {
 
         try {
-           
-           
-            
-            Prestamo prestamo = new Prestamo();
+           Prestamo prestamo = new Prestamo();
             validar(fechaDevolucion);
 
             Optional<Libro> respuesta1 = libroRepositorio.findById(idLibro);
@@ -131,9 +128,9 @@ public class PrestamoServicio {
     }
 
     @Transactional(readOnly = true)
-    public List<Prestamo> obtenerPrestamos() throws Exception {
+    public List<Prestamo> findAll(Boolean alta) throws Exception {
         try {
-            return prestamoRepositorio.findAll();
+            return prestamoRepositorio.findAll(true);
         } catch (Exception e) {
             throw new Exception("Error al obtener lista de prestamos");
         }
@@ -147,6 +144,15 @@ public class PrestamoServicio {
         } catch (Exception e) {
             throw new Exception("Error al buscar prestamo por ID");
         }
+    }
+    
+    public List<Prestamo> prestamosClienteId(String id)throws Exception{
+        try {
+            return prestamoRepositorio.prestamosClienteId(id);
+        } catch (Exception e) {
+            throw new Exception("Error al obtener lista de prestamos de cliente");
+        }
+        
     }
 
     public void validar(LocalDate fechaDevolucion) throws ErrorServicio, Exception {

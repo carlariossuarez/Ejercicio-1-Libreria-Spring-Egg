@@ -28,14 +28,14 @@
         <label>Autor</label>
         <select class="form-select" aria-label="Elegir autor" id="idAutor" th:field="*{autor}" required name ="idAutor">
           <option  selected  value="">Elegir autor</option>
-          <option th:each="autor : ${autores}" th:text="${autor.nombre}"
+          <option th:each="autor : ${autores}" th:if="${autor.alta}" th:text="${autor.nombre}"
                   th:value="${autor.id}"></option>
           </select>
           <div class="invalid-feedback">El autor es obligatorio</div>
           <label>Editorial</label> <br>
         <select class="form-select" aria-label="Elegir editorial" id="idEditorial"  th:field="*{editorial}" required name="idEditorial" >
           <option selected  value="">Elegir editorial</option>
-          <option th:each="editorial : ${editoriales}" th:text="${editorial.nombre}"
+          <option th:each="editorial : ${editoriales}" th:if="${editorial.alta}" th:text="${editorial.nombre}"
                   th:value="${editorial.id}"></option>
                 </select>
                 <div class="invalid-feedback">La editorial es obligatoria</div>

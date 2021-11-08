@@ -19,7 +19,7 @@
             <label>Libro</label>
             <select class="form-select" aria-label="Elegir libro" id="idLibro" th:field="*{libro}" required name ="idLibro">
                 <option  selected  value="">Elegir libro</option>
-                <option th:each="libro : ${libros}" th:text="${libro.titulo}"
+                <option th:each="libro : ${libros}" th:if="${libro.alta}" th:text="${libro.titulo}"
                         th:value="${libro.id}"></option>
                 </select>
                 <div class="invalid-feedback">El libro es obligatorio</div>
@@ -27,7 +27,7 @@
                 <label>Cliente</label> <br>
                 <select class="form-select" aria-label="Elegir cliente" id="idCliente"  th:field="*{cliente}" required name="idCliente" >
                     <option selected  value="">Elegir cliente</option>
-                    <option th:each="cliente : ${clientes}" th:text="${cliente.nombre}"
+                    <option th:each="cliente : ${clientes}" th:if="${cliente.alta}" th:text="${cliente.nombre}"
                             th:value="${cliente.id}"></option>
                           </select>
                           <div class="invalid-feedback">El cliente es obligatorio</div>
