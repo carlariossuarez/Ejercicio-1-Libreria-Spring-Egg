@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg" >
+    <div class="container-fluid">
+      <a class="navbar-brand pos" th:href="@{/}">  <img src="/img/book.png" alt="" width="50" height="42"> </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav text-end">
+          <!-- Button  modal -->
+         <button type="button" class="btn btn ing" data-bs-toggle="modal" data-bs-target="#ingresar">
+          Ingresar</button>
+         <button type="button" class="btn btn reg mx-3" data-bs-toggle="modal" data-bs-target="#registrarse">
+          Registrarse</button>
+         
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row justify-content-center">
+    <div class="alert alert-secondary alert-dismissible fade show text-center col-5" role="alert"
+        th:if="${exito != null}">
+        <strong th:text="${exito}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible fade show text-center col-5" role="alert"
+        th:if="${error != null}">
+        <strong th:text="${error}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible fade show text-center col-5 tooltip" role="alert"
+        th:if="${errorLogin != null}">
+        <strong th:text="${errorLogin}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible fade show text-center col-5 tooltip" role="alert"
+        th:if="${logout != null}">
+        <strong th:text="${logout}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+
+    
+      <div th:if="${roles.isEmpty()}">
+        <h5>Ingresar para configurar </h5>
+        <form th:action="@{/rol/guardar}" method="POST" >
+            <button type="submit" class="btn btn-primary" >Configurar</button>
+        </form>
+    </div>
+
+
+
+    <div th:unless="${roles.isEmpty()}" class="container">
+        <div class="row">
+          <div class="col-5" >
+            <div class="row texto">
+            <h1 class="col-12 tam">Libros Online Egg</h1>
+            <p class="col-8">Encontrá acá todos tus libros y autores favoritos junto a sus editoriales de confianza. </p>
+          </div>
+          </div>
+          
+        </div>
+      </div>
+      
+<!-- Modal general-->
+<div class="modal fade" id="registrarse" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrate a la plataforma</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#registrarCliente">Cliente</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registrarAdmin">Administrador</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+    
+  
+  <!-- Modal login-->
+  <div class="modal fade" id="ingresar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ingresá a la plataforma</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form th:action="@{/logincheck}" method="post">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Correo electronico</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username">
+                  
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                </div>
+                
+                <button type="submit" class="btn btn ing">Ingresar</button>
+              </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+<!-- Modal registro -->
+  <div class="modal fade" id="registrarCliente" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrate a la plataforma</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form th:action="@{/usuarios/guardar-usuarios}" method="post">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Correo electronico</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="correo">
+                  
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" name="clave">
+                </div>
+                
+                <button type="submit" class="btn btn reg">Guardar</button>
+              </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal registro admin -->
+  <div class="modal fade" id="registrarAdmin" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrate a la plataforma</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form th:action="@{/usuarios/guardar-admin}" method="post">
+                <div class="mb-3">
+                  <label for="exampleInputEmail11" class="form-label">Correo electronico</label>
+                  <input type="email" class="form-control" id="exampleInputEmail11"  name="correo">
+                  
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword11" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="exampleInputPassword11" name="clave">
+                  <label for="exampleInputPassword22" class="form-label">Validación</label>
+                  <input type="password" class="form-control" id="exampleInputPassword22" name="valid">
+                </div>
+                
+                <button type="submit" class="btn btn reg">Guardar</button>
+              </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script>
+  (function () {
+'use strict'
+
+var forms = document.querySelectorAll('.needs-validation')
+
+
+Array.prototype.slice.call(forms)
+.forEach(function (form) {
+  form.addEventListener('submit', function (event) {
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    form.classList.add('was-validated')
+  }, false)
+})
+})()
+</script>
+</body>
+</html>

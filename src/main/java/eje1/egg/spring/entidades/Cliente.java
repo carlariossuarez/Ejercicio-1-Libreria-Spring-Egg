@@ -5,6 +5,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -13,24 +15,27 @@ public class Cliente {
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    @Column(nullable=false)
     private Long documento;
     private String nombre;
     private String apellido;
     private String telefono;
     @Column(nullable=false)
     private Boolean alta;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private Usuario usuario;
 
     public Cliente() {
     }
 
-    public Cliente(String id, Long documento, String nombre, String apellido, String telefono, Boolean alta) {
+    public Cliente(String id, Long documento, String nombre, String apellido, String telefono, Boolean alta, Usuario usuario) {
         this.id = id;
         this.documento = documento;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
         this.alta = alta;
+        this.usuario = usuario;
     }
 
     public String getId() {
@@ -80,6 +85,16 @@ public class Cliente {
     public void setAlta(Boolean alta) {
         this.alta = alta;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+
     
     
 }

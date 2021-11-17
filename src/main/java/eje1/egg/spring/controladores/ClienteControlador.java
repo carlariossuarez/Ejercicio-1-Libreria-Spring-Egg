@@ -4,6 +4,7 @@ import eje1.egg.spring.entidades.Cliente;
 import eje1.egg.spring.errores.ErrorServicio;
 import eje1.egg.spring.servicios.ClienteServicio;
 import eje1.egg.spring.servicios.PrestamoServicio;
+import eje1.egg.spring.servicios.UsuarioServicio;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ public class ClienteControlador {
     private ClienteServicio clienteServicio;
     @Autowired
     private PrestamoServicio prestamoServicio;
-    
+    @Autowired
+    private UsuarioServicio usuarioServicio;
 
     @GetMapping
     public ModelAndView mostrarClientes(HttpServletRequest request) throws Exception, ErrorServicio {
@@ -37,31 +39,38 @@ public class ClienteControlador {
             mav.addObject("error", flashMap.get("error-name"));
         }
         mav.addObject("clientes", clienteServicio.obtenerClientes());
-        
+
         return mav;
     }
-    
+
     @GetMapping("/mostrar-prestamos-clientes/{id}")
     public ModelAndView prestamosClientes(@PathVariable String id) throws Exception, ErrorServicio {
         try {
             ModelAndView mav = new ModelAndView("prestamosClientes");
-        mav.addObject("clientePrestamo", prestamoServicio.prestamosClienteId(id));
-        return mav;
+            mav.addObject("clientePrestamo", prestamoServicio.prestamosClienteId(id));
+            return mav;
         } catch (ErrorServicio ex) {
             throw new ErrorServicio("Error al obtener prestamos de clientes");
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
     @GetMapping("/crear-clientes")
-    public ModelAndView crearClientes() {
-        ModelAndView mav = new ModelAndView("clientes-formulario");
-        mav.addObject("cliente", new Cliente());
-        mav.addObject("title", "Crear Cliente");
-        mav.addObject("action", "guardar-clientes");
-        return mav;
+    public ModelAndView crearClientes() throws Exception {
+        try {
+            ModelAndView mav = new ModelAndView("clientes-formulario");
+            mav.addObject("cliente", new Cliente());
+            mav.addObject("usuario", usuarioServicio.obtenerUsuarios());
+            mav.addObject("title", "Crear Cliente");
+            mav.addObject("action", "guardar-clientes");
+            return mav;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
     }
 
     @GetMapping("/editar-clientes/{id}")
@@ -69,6 +78,7 @@ public class ClienteControlador {
         try {
             ModelAndView mav = new ModelAndView("clientes-formulario");
             mav.addObject("cliente", clienteServicio.buscarPorId(id));
+            mav.addObject("usuario", usuarioServicio.obtenerUsuarios());
             mav.addObject("title", "Editar Cliente");
             mav.addObject("action", "modificar-clientes");
             return mav;
@@ -81,9 +91,9 @@ public class ClienteControlador {
 
     @PostMapping("/guardar-clientes")
     public RedirectView guardarClientes(@RequestParam Long documento, @RequestParam String nombre, @RequestParam String apellido,
-            @RequestParam String telefono, RedirectAttributes attributes) throws Exception, ErrorServicio {
+            @RequestParam String telefono, @RequestParam ("usuario") String idUsuario, RedirectAttributes attributes) throws Exception, ErrorServicio {
         try {
-            clienteServicio.crearCliente(documento, nombre, apellido, telefono);
+            clienteServicio.crearCliente(documento, nombre, apellido, telefono, idUsuario);
             attributes.addFlashAttribute("exito-name", "El cliente ha sido creado exitosamente");
 
         } catch (Exception e) {

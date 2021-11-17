@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+
 public class Principal {
     
-    @GetMapping
+    @GetMapping("/index")
     public ModelAndView inicio(){
         return new ModelAndView ("index");
     }

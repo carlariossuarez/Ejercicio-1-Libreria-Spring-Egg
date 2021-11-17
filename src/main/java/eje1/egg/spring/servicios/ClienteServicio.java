@@ -1,8 +1,10 @@
 package eje1.egg.spring.servicios;
 
 import eje1.egg.spring.entidades.Cliente;
+import eje1.egg.spring.entidades.Usuario;
 import eje1.egg.spring.errores.ErrorServicio;
 import eje1.egg.spring.repositorios.ClienteRepositorio;
+import eje1.egg.spring.repositorios.UsuarioRepositorio;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +16,43 @@ public class ClienteServicio {
 
     @Autowired
     private ClienteRepositorio clienteRepositorio;
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
-    public void crearCliente(Long documento, String nombre, String apellido, String telefono) throws ErrorServicio, Exception {
+    public void crearCliente(Long documento, String nombre, String apellido, String telefono, String idUsuario) throws ErrorServicio, Exception {
 
         try {
             Cliente cliente = new Cliente();
             validar(documento, nombre, apellido, telefono);
 
-            cliente.setDocumento(documento);
-            cliente.setNombre(nombre);
-            cliente.setApellido(apellido);
-            cliente.setTelefono(telefono);
+            Optional<Usuario> respuesta = usuarioRepositorio.findById(idUsuario);
+            if (respuesta.isPresent()) {
+                Usuario usuario = respuesta.get();
+                cliente.setDocumento(documento);
+                cliente.setNombre(nombre);
+                cliente.setApellido(apellido);
+                cliente.setTelefono(telefono);
+                cliente.setAlta(true);
+                cliente.setUsuario(usuario);
+                clienteRepositorio.save(cliente);
+            } else {
+                throw new ErrorServicio("No se encontró el ID");
+            }
+
+        } catch (ErrorServicio ex) {
+            throw ex;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void crearCliente(Usuario usuario) throws ErrorServicio, Exception {
+        try {
+            validar(usuario);
+            Cliente cliente = new Cliente();
+            cliente.setUsuario(usuario);
             cliente.setAlta(true);
             clienteRepositorio.save(cliente);
         } catch (ErrorServicio ex) {
@@ -33,6 +60,7 @@ public class ClienteServicio {
         } catch (Exception e) {
             throw e;
         }
+
     }
 
     @Transactional
@@ -46,10 +74,12 @@ public class ClienteServicio {
                 cliente.setNombre(nombre);
                 cliente.setApellido(apellido);
                 cliente.setTelefono(telefono);
+
                 clienteRepositorio.save(cliente);
             } else {
                 throw new ErrorServicio("No se encontró el ID");
             }
+
         } catch (ErrorServicio ex) {
             throw ex;
         } catch (Exception e) {
@@ -69,10 +99,10 @@ public class ClienteServicio {
             } else {
                 throw new ErrorServicio("No se encontró el ID");
             }
-            
+
         } catch (ErrorServicio ex) {
             throw ex;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -127,6 +157,19 @@ public class ClienteServicio {
 
     private Boolean validarDni(String dni) {
         return dni.matches("^[0-9]{7,9}$");
+    }
+    
+    public void validar(Usuario usuario)throws ErrorServicio, Exception{
+        try {
+            if (usuario == null){
+            throw new ErrorServicio("El usuario no puede ser nulo");
+        }
+        } catch (ErrorServicio ex) {
+            throw ex;
+        }catch(Exception e){
+            throw e;
+        }
+        
     }
 
 }

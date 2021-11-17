@@ -13,6 +13,11 @@ nav{
 .navbar-brand , .nav-link{
     color: black
 }
+.pos{
+  transform: translateX(50%) translateY(5%);
+  left: 50%;
+  
+}
 .texto{
   
   position: absolute;
@@ -27,4 +32,10 @@ h1{
 }
 p{
   font-size: 20px;
+}
+.ing{
+  background-color: #FFBE55;
+}
+.reg{
+  background-color: #2A94F4;
 }
